@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -20,6 +21,8 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
     private final UserService userService;
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:00");
 
     public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper, UserService userService) {
         this.offerRepository = offerRepository;
@@ -40,7 +43,7 @@ public class OfferServiceImpl implements OfferService {
                 .setImageUrl(offer.getImageUrl())
                 .setCategory(offerAddDTO.getCategory());
         offer.setModel(model);
-        offer.setCreated(LocalDateTime.now());
+        offer.setCreated(LocalDateTime.parse(LocalDateTime.now().format(formatter), formatter));
         User user = this.userService.findCurrendUser();
         offer.setSeller(user);
         this.offerRepository.saveAndFlush(offer);

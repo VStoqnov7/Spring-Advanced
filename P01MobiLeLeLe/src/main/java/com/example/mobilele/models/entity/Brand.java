@@ -22,7 +22,6 @@ public class Brand extends BaseEntity{
     private String name;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime created;
 
     @Column

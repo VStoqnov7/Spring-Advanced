@@ -4,6 +4,7 @@ import com.example.mobilele.models.enums.Engine;
 import com.example.mobilele.models.enums.Transmission;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -39,6 +40,7 @@ public class Offer extends BaseEntity{
     private int year;
 
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime created;
 
     @Column

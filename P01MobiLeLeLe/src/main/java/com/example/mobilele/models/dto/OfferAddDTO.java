@@ -5,12 +5,14 @@ import com.example.mobilele.models.enums.Engine;
 import com.example.mobilele.models.enums.Transmission;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 public class OfferAddDTO {
 
     @NotNull

@@ -74,9 +74,19 @@ public class OfferController {
     }
 
     @GetMapping("/details/update/{offerId}")
-    public ModelAndView updateOffer(ModelAndView model, @PathVariable String offerId){
+    public ModelAndView updateOffer(@ModelAttribute OfferAddDTO offerAddDTO, ModelAndView model, @PathVariable String offerId){
         Offer offer = this.offerService.findOfferById(offerId);
         if (offer != null){
+            offerAddDTO.setModel(offer.getModel().getName())
+                    .setPrice(offer.getPrice())
+                    .setEngine(offer.getEngine())
+                    .setTransmission(offer.getTransmission())
+                    .setYear(offer.getYear())
+                    .setMileage(offer.getMileage())
+                    .setImageUrl(offer.getImageUrl())
+                    .setDescription(offer.getDescription())
+                    .setCategory(offer.getModel().getCategory())
+                    .setBrand(offer.getModel().getBrand().getName());
             model.addObject("currentOffer", offer);
             model.addObject("engines", Engine.values());
             model.addObject("transmissions", Transmission.values());
@@ -86,7 +96,7 @@ public class OfferController {
         return model;
     }
 
-    @PostMapping("details/update/{offerId}")
+    @PostMapping("/details/update/{offerId}")
     public ModelAndView updateOffer(ModelAndView model,
                                     @PathVariable String offerId,
                                     @Valid OfferAddDTO offerAddDTO,
@@ -100,14 +110,14 @@ public class OfferController {
             return model;
         }
         this.offerService.updateOffer(offerId,offerAddDTO);
-        model.setViewName("redirect:/user/offers/update/" + offerId);
+        model.setViewName("redirect:/user/offers/details/" + offerId);
         return model;
     }
 
-    @GetMapping("details/delete/{offerId}")
+    @GetMapping("/details/delete/{offerId}")
     public ModelAndView deleteOffer(@PathVariable String offerId,ModelAndView model){
         this.offerService.deleteOffer(offerId);
-        model.setViewName("redirect:/offers");
+        model.setViewName("redirect:/user/offers/all");
         return model;
     }
 }
