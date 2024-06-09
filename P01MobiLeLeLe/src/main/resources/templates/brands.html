@@ -10,40 +10,40 @@
     <nav th:replace="~{/fragments/navigation}"></nav>
 </div>
 
+<
 <div class="container">
     <h2 class="text-center text-white m-3">All Brands</h2>
-    <div class="row mb-4">
-        <div class="col-md-6 mb-4 d-flex align-items-stretch">
-            <div class="brand-section p-3 border rounded bg-light d-flex flex-column">
-                <h2 class="text-center text-dark">Brand name</h2>
-                <div class="flex-grow-1">
-                    <table class="table table-striped">
-                        <thead>
+    <div class='row mb-4 d-flex justify-content-around'>
+        <div class="brand-section col-md-5 mr-auto d-flex flex-column mb-3"
+             th:each="brand : ${allBrands}">
+            <h2>Car brand:
+                <span th:text="${brand.getName()}"></span>
+            </h2>
+            <div>Models:
+                <table>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Start Year</th>
+                        <th>End Year</th>
+                        <th>Picture</th>
+                    </tr>
+                    <div th:each="model : ${brand.getModels()}">
                         <tr>
-                            <th>No</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Start Year</th>
-                            <th>End Year</th>
-                            <th>Picture</th>
+                            <th><span>1</span></th>
+                            <th><span th:text="${model.getName()}"></span></th>
+                            <th><span th:text="${model.getCategory()}"></span></th>
+                            <th><span th:text="${model.getStartYear()}"></span></th>
+                            <th><span th:text="${model.getEndYear()}"></span></th>
+                            <th><img alt="image" th:src="${model.getImageUrl()}"
+                                     class="img-thumbnail rounded"></th>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td ">1</td>
-                            <td ">Model Name</td>
-                            <td >Model Category</td>
-                            <td >Model Start Year</td>
-                            <td>Model End Year</td>
-                            <td><img src="/" width="90"/></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    </div>
+                </table>
             </div>
         </div>
     </div>
-
     <div>
         <footer></footer>
     </div>

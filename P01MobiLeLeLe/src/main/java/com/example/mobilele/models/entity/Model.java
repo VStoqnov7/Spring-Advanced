@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,4 +41,7 @@ public class Model extends BaseEntity{
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Brand brand;
+
+    @OneToMany(mappedBy = "model")
+    private List<Offer> offers;
 }
