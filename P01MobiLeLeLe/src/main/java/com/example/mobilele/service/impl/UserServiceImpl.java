@@ -46,11 +46,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        return this.userRepository.findByUsername(username);
+        return this.userRepository.findByUsername(username).get();
     }
 
     @Override
     public User findCurrendUser() {
-        return this.userRepository.findByUsername(currentUser.getUsername());
+        return this.userRepository.findByUsername(currentUser.getUsername()).get();
     }
 }

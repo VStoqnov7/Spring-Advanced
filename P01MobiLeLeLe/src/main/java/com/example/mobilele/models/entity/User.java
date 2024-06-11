@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,8 +28,8 @@ public class User extends BaseEntity{
     @Column(name = "is_active")
     private boolean isActive;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private UserRole role;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<UserRole> roles;
 
     @Column(name = "image_url")
     private String imageUrl;

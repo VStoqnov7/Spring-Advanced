@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,4 +19,7 @@ public class UserRole extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role name;
+
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 }
