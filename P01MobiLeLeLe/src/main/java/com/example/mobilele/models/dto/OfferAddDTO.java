@@ -3,11 +3,15 @@ package com.example.mobilele.models.dto;
 import com.example.mobilele.models.enums.Category;
 import com.example.mobilele.models.enums.Engine;
 import com.example.mobilele.models.enums.Transmission;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
-import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 @Getter

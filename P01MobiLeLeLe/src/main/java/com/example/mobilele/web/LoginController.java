@@ -10,21 +10,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping("/user")
 public class LoginController {
-    private final UserService userService;
+    /* private final UserService userService;
 
     public LoginController(UserService userService) {
         this.userService = userService;
-    }
+    }*/
 
+    /*
     @ModelAttribute
     public UserLoginDTO loginDTO() {
         return new UserLoginDTO();
-    }
+    }*/
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView model) {
@@ -32,8 +33,19 @@ public class LoginController {
         return model;
     }
 
-    @PostMapping("/login")
-    public ModelAndView register(ModelAndView model,
+    @PostMapping("/login-error")
+    public ModelAndView onLoginFailure(ModelAndView modelAndView, @ModelAttribute("username") String username) {
+
+        modelAndView.addObject("username", username);
+        modelAndView.addObject("bad_credentials", true);
+
+        modelAndView.setViewName("auth-login");
+
+        return modelAndView;
+    }
+
+   /* @PostMapping("/login")
+    public ModelAndView login(ModelAndView model,
                                  @Valid UserLoginDTO userLoginDTO,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -44,5 +56,5 @@ public class LoginController {
         this.userService.loginUser(userLoginDTO);
         model.setViewName("redirect:/home");
         return model;
-    }
+    }*/
 }

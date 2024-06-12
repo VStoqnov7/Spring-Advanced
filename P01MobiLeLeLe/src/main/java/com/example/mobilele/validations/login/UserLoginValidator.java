@@ -3,10 +3,10 @@ package com.example.mobilele.validations.login;
 import com.example.mobilele.models.dto.UserLoginDTO;
 import com.example.mobilele.models.entity.User;
 import com.example.mobilele.service.UserService;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 public class UserLoginValidator implements ConstraintValidator<UserLoginForm, UserLoginDTO> {
 
@@ -26,7 +26,7 @@ public class UserLoginValidator implements ConstraintValidator<UserLoginForm, Us
 
     @Override
     public boolean isValid(UserLoginDTO userLoginDTO, ConstraintValidatorContext context) {
-        User user = this.userService.findByUsername(userLoginDTO.getUsername());
+        User user = this.userService.findByUsername(userLoginDTO.getUsername()).get();
 
         if (user != null && passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
             return true;

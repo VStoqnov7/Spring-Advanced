@@ -2,11 +2,11 @@ package com.example.mobilele.models.entity;
 
 import com.example.mobilele.models.enums.Engine;
 import com.example.mobilele.models.enums.Transmission;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 

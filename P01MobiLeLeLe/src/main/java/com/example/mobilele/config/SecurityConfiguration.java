@@ -9,6 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 @Configuration
 public class SecurityConfiguration {
@@ -23,7 +28,6 @@ public class SecurityConfiguration {
         this.userDetailsService = userDetailsService;
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(
@@ -32,9 +36,11 @@ public class SecurityConfiguration {
                         // All static resources which are situated in js, images, css are available for anyone
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         // Allow anyone to see the home page, the registration page and the login form
-                        .antMatchers("/", "/user/login", "/user/register", "/user/login-error","/error").permitAll()
-                        .antMatchers("/user/offers//details/update/{offerId}","/user/offers//details/delete/{offerId}",
-                                "/user/offers//details/{offerId}").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/", "/user/login", "/user/register", "/user/login-error").permitAll()
+                        .requestMatchers("/offers/all", "offers/details/{id}").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/offers/update/{id}").hasRole(Role.USER.name())
+                        .requestMatchers("/brands").hasRole(Role.ADMIN.name())
                         // all other requests are authenticated.
                         .anyRequest()
                         .authenticated()
@@ -43,16 +49,16 @@ public class SecurityConfiguration {
                     formLogin
                             // redirect here when we access something which is not allowed.
                             // also this is the page where we perform login.
-                            .loginPage("/user/login")
+                            .loginPage("/users/login")
                             // The names of the input fields (in our case in auth-login.html)
-                            .usernameParameter("username")
+                            .usernameParameter("email")
                             .passwordParameter("password")
                             .defaultSuccessUrl("/", true)
                             .failureForwardUrl("/users/login-error");
                 }
         ).logout(
                 logout -> {
-                     logout
+                    logout
                             // the URL where we should POST something in order to perform the logout
                             .logoutUrl("/users/logout")
                             // where to go when logged out?
@@ -66,8 +72,7 @@ public class SecurityConfiguration {
                     rememberMe
                             .key(rememberMeKey)
                             .rememberMeParameter("remember")
-                            .rememberMeCookieName("remember")
-                            .userDetailsService(userDetailsService);
+                            .rememberMeCookieName("remember");
                 }
         ).build();
     }

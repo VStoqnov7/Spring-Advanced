@@ -6,12 +6,12 @@ import com.example.mobilele.models.enums.Category;
 import com.example.mobilele.models.enums.Engine;
 import com.example.mobilele.models.enums.Transmission;
 import com.example.mobilele.service.OfferService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller

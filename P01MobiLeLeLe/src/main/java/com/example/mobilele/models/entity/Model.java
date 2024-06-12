@@ -2,11 +2,11 @@ package com.example.mobilele.models.entity;
 
 
 import com.example.mobilele.models.enums.Category;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 

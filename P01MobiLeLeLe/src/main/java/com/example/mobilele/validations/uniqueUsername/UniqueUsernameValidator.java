@@ -1,9 +1,8 @@
 package com.example.mobilele.validations.uniqueUsername;
 
 import com.example.mobilele.repository.UserRepository;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
 

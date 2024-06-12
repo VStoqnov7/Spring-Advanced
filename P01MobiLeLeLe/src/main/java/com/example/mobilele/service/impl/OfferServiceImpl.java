@@ -4,7 +4,6 @@ import com.example.mobilele.models.dto.OfferAddDTO;
 import com.example.mobilele.models.entity.Brand;
 import com.example.mobilele.models.entity.Model;
 import com.example.mobilele.models.entity.Offer;
-import com.example.mobilele.models.entity.User;
 import com.example.mobilele.repository.BrandRepository;
 import com.example.mobilele.repository.OfferRepository;
 import com.example.mobilele.service.OfferService;

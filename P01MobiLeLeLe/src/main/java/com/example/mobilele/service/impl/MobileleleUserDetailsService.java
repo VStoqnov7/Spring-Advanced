@@ -2,6 +2,7 @@ package com.example.mobilele.service.impl;
 
 import com.example.mobilele.models.entity.UserRole;
 import com.example.mobilele.repository.UserRepository;
+import com.example.mobilele.service.UserService;
 import com.example.mobilele.user.MobileleleUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,9 +20,10 @@ public class MobileleleUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public MobileleleUserDetailsService(UserRepository userRepository){
+    public MobileleleUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -1,14 +1,16 @@
 package com.example.mobilele.models.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import javax.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Getter
 @Setter
+@Accessors(chain = true)
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity{

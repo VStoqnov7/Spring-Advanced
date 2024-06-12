@@ -1,14 +1,11 @@
 package com.example.mobilele.models.entity;
 
 import com.example.mobilele.models.enums.Role;
-import lombok.Builder;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import java.util.List;
+
 
 @Getter
 @Setter
@@ -19,7 +16,4 @@ public class UserRole extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role name;
-
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
 }
