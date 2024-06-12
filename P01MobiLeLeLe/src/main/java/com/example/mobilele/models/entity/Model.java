@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -44,4 +45,8 @@ public class Model extends BaseEntity{
 
     @OneToMany(mappedBy = "model")
     private List<Offer> offers;
+
+    public Model() {
+        this.offers = new ArrayList<>();
+    }
 }

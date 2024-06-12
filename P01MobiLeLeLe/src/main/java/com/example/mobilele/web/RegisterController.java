@@ -29,13 +29,13 @@ public class RegisterController {
     }
 
     @GetMapping("/register")
-    public ModelAndView register(ModelAndView model) {
+    public ModelAndView showRegistrationForm(ModelAndView model) {
         model.setViewName("auth-register");
         return model;
     }
 
     @PostMapping("/register")
-    public ModelAndView register(ModelAndView model,
+    public ModelAndView processRegistrationForm(ModelAndView model,
                                  @Valid UserRegistrationDTO userRegistrationDTO,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -45,7 +45,7 @@ public class RegisterController {
 
         this.userService.saveUser(userRegistrationDTO);
 
-        model.setViewName("redirect:/");
+        model.setViewName("redirect:/home");
         return model;
     }
 }

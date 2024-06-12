@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 @Getter
 @Setter
@@ -30,7 +31,7 @@ public class User extends BaseEntity{
     @Column(name = "is_active")
     private boolean isActive;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
     private List<UserRole> roles;
 
     @Column(name = "image_url")
@@ -42,4 +43,7 @@ public class User extends BaseEntity{
     @Column
     private LocalDateTime modified;
 
+    public User() {
+        this.roles = new ArrayList<>();
+    }
 }

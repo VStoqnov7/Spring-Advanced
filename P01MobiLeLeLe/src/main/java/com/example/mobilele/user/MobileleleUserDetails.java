@@ -44,6 +44,7 @@ public class MobileleleUserDetails implements UserDetails {
             fullName.append(this.getFirstName());
         }
 
+
         if (this.getLastName() != null) {
             if (fullName.length() > 0) {
                 fullName.append(" ");

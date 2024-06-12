@@ -2,8 +2,11 @@ package com.example.mobilele.service.impl;
 
 import com.example.mobilele.models.dto.UserRegistrationDTO;
 import com.example.mobilele.models.entity.User;
+import com.example.mobilele.models.entity.UserRole;
+import com.example.mobilele.models.enums.Role;
 import com.example.mobilele.repository.UserRepository;
 import com.example.mobilele.service.UserService;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,6 +37,7 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userRegistrationDTO,User.class);
         user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
         user.setCreated(LocalDateTime.now());
+        user.getRoles().add(new UserRole().setName(Role.USER));
         this.userRepository.saveAndFlush(user);
     }
 
