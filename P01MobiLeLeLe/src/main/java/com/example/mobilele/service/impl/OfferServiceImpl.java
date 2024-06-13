@@ -4,10 +4,14 @@ import com.example.mobilele.models.dto.OfferAddDTO;
 import com.example.mobilele.models.entity.Brand;
 import com.example.mobilele.models.entity.Model;
 import com.example.mobilele.models.entity.Offer;
+import com.example.mobilele.models.entity.User;
 import com.example.mobilele.repository.BrandRepository;
+import com.example.mobilele.repository.ModelRepository;
 import com.example.mobilele.repository.OfferRepository;
+import com.example.mobilele.service.ModelService;
 import com.example.mobilele.service.OfferService;
 import com.example.mobilele.service.UserService;
+import com.example.mobilele.user.MobileleleUserDetails;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +27,20 @@ public class OfferServiceImpl implements OfferService {
     private final ModelMapper modelMapper;
     private final UserService userService;
     private final BrandRepository brandRepository;
+    private final ModelRepository modelRepository;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:00");
 
-    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper, UserService userService, BrandRepository brandRepository) {
+    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper, UserService userService, BrandRepository brandRepository, ModelRepository modelRepository) {
         this.offerRepository = offerRepository;
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.brandRepository = brandRepository;
+        this.modelRepository = modelRepository;
     }
 
     @Override
-    public void saveOffer(OfferAddDTO offerAddDTO) {
+    public void saveOffer(OfferAddDTO offerAddDTO, MobileleleUserDetails userDetails) {
         Offer offer = modelMapper.map(offerAddDTO, Offer.class);
 
         Brand existBrand = this.brandRepository.findByName(offerAddDTO.getBrand());
@@ -53,9 +59,17 @@ public class OfferServiceImpl implements OfferService {
                 .setCategory(offerAddDTO.getCategory());
         existBrand.getModels().add(model);
 
+        User user = this.userService.findByUsername(userDetails.getUsername()).get();
+
+        offer.setSeller(user);
         offer.setModel(model);
         offer.setCreated(LocalDateTime.now());
         this.offerRepository.saveAndFlush(offer);
+    }
+
+    @Override
+    public List<Offer> getAllOffers() {
+        return this.offerRepository.findAll();
     }
 
     @Override
@@ -72,22 +86,34 @@ public class OfferServiceImpl implements OfferService {
     public void updateOffer(String offerId, OfferAddDTO offerAddDTO) {
         Offer offer = this.offerRepository.findById(offerId).orElse(null);
         if (offer != null) {
-            Model model = new Model()
-                    .setName(offerAddDTO.getModel())
-                    .setCreated(LocalDateTime.now())
-                    .setImageUrl(offer.getImageUrl())
-                    .setCategory(offerAddDTO.getCategory());
-            Brand existBrand = this.brandRepository.findByName(offerAddDTO.getBrand());
-            if (existBrand == null) {
-                Brand brand = new Brand()
-                        .setName(offerAddDTO.getBrand())
-                        .setCreated(LocalDateTime.now());
-                existBrand = this.brandRepository.saveAndFlush(brand);
-            }
-            existBrand.getModels().add(model);
+            Model model = offer.getModel();
+            Brand brand = model.getBrand();
 
-            offer.setModel(model);
+            model.setName(offerAddDTO.getModel());
+            model.setImageUrl(offerAddDTO.getImageUrl());
+            model.setCategory(offerAddDTO.getCategory());
+            model.setCreated(LocalDateTime.now());
+
+            if (!brand.getName().equals(offerAddDTO.getBrand())) {
+                brand = this.brandRepository.findByName(offerAddDTO.getBrand());
+                if (brand == null) {
+                    brand = new Brand();
+                    brand.setName(offerAddDTO.getBrand());
+                    brand.setCreated(LocalDateTime.now());
+                    brand = this.brandRepository.saveAndFlush(brand);
+                }
+                model.setBrand(brand);
+            }
+
+            offer.setEngine(offerAddDTO.getEngine());
+            offer.setTransmission(offerAddDTO.getTransmission());
+            offer.setYear(offerAddDTO.getYear());
+            offer.setMileage(offerAddDTO.getMileage());
+            offer.setDescription(offerAddDTO.getDescription());
+            offer.setImageUrl(offerAddDTO.getImageUrl());
             offer.setCreated(LocalDateTime.now());
+
+            this.modelRepository.saveAndFlush(model);
             this.offerRepository.saveAndFlush(offer);
         }
     }

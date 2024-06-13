@@ -9,9 +9,7 @@
 
 <div>
     <nav th:replace="~{/fragments/navigation}"></nav>
-</div
-
-
+</div>
 
 <div class="container-fluid">
     <h2 class="text-center text-white mt-5">All Offers</h2>
@@ -33,7 +31,7 @@
                     <div class="card-text"><span th:text="'Transmission ' + ${offer.transmission.name}">• Transmission type</span></div>
                 </li>
             </ul>
-            <div class="card-body">
+            <div class="card-body" >
                 <a class="card-link" th:href="'/user/offers/details/' + ${offer.id}">Details</a>
             </div>
         </div>

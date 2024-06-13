@@ -6,7 +6,9 @@ import com.example.mobilele.models.enums.Category;
 import com.example.mobilele.models.enums.Engine;
 import com.example.mobilele.models.enums.Transmission;
 import com.example.mobilele.service.OfferService;
+import com.example.mobilele.user.MobileleleUserDetails;
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,11 @@ public class OfferController {
 
     @ModelAttribute(name = "offerAddDTO")
     public OfferAddDTO offerAddDTO(){
-        return new OfferAddDTO();
+        OfferAddDTO offerAddDTO = new OfferAddDTO();
+        offerAddDTO.setEngine(Engine.GASOLINE);
+        offerAddDTO.setTransmission(Transmission.MANUAL);
+        offerAddDTO.setCategory(Category.CAR);
+        return offerAddDTO;
     }
 
 
@@ -39,10 +45,11 @@ public class OfferController {
         return model;
     }
 
-    @PostMapping("add")
-    public ModelAndView addOffer(ModelAndView model,
-                                 @Valid OfferAddDTO offerAddDTO,
-                                 BindingResult bindingResult){
+    @PostMapping("/add")
+    public ModelAndView addOffers(ModelAndView model,
+                                  @Valid OfferAddDTO offerAddDTO,
+                                  BindingResult bindingResult,
+                                  @AuthenticationPrincipal MobileleleUserDetails userDetails){
         if (bindingResult.hasErrors()){
             model.addObject("engines", Engine.values());
             model.addObject("transmissions", Transmission.values());
@@ -50,14 +57,14 @@ public class OfferController {
             model.setViewName("offer-add");
             return model;
         }
-        this.offerService.saveOffer(offerAddDTO);
+        this.offerService.saveOffer(offerAddDTO,userDetails);
         model.setViewName("redirect:/home");
         return model;
     }
 
     @GetMapping("/all")
     public ModelAndView allOffers(ModelAndView model){
-        List<Offer> allOffers = this.offerService.allOffers();
+        List<Offer> allOffers = this.offerService.getAllOffers();
         model.addObject("allOffers", allOffers);
         model.setViewName("offers");
         return model;
