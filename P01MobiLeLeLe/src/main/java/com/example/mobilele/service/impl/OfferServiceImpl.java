@@ -8,15 +8,16 @@ import com.example.mobilele.models.entity.User;
 import com.example.mobilele.repository.BrandRepository;
 import com.example.mobilele.repository.ModelRepository;
 import com.example.mobilele.repository.OfferRepository;
-import com.example.mobilele.service.ModelService;
 import com.example.mobilele.service.OfferService;
 import com.example.mobilele.service.UserService;
 import com.example.mobilele.user.MobileleleUserDetails;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,18 +29,19 @@ public class OfferServiceImpl implements OfferService {
     private final UserService userService;
     private final BrandRepository brandRepository;
     private final ModelRepository modelRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:00");
-
-    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper, UserService userService, BrandRepository brandRepository, ModelRepository modelRepository) {
+    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper, UserService userService, BrandRepository brandRepository, ModelRepository modelRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.offerRepository = offerRepository;
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.brandRepository = brandRepository;
         this.modelRepository = modelRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
+    @CacheEvict(value = {"offers", "brands"}, allEntries = true, beforeInvocation = true)
     public void saveOffer(OfferAddDTO offerAddDTO, MobileleleUserDetails userDetails) {
         Offer offer = modelMapper.map(offerAddDTO, Offer.class);
 
@@ -66,14 +68,9 @@ public class OfferServiceImpl implements OfferService {
         offer.setCreated(LocalDateTime.now());
         this.offerRepository.saveAndFlush(offer);
     }
-
     @Override
+    @Cacheable(value = "offers")
     public List<Offer> getAllOffers() {
-        return this.offerRepository.findAll();
-    }
-
-    @Override
-    public List<Offer> allOffers() {
         return this.offerRepository.findAll();
     }
 
@@ -83,6 +80,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    @CacheEvict(value = {"offers", "brands"}, allEntries = true, beforeInvocation = true)
     public void updateOffer(String offerId, OfferAddDTO offerAddDTO) {
         Offer offer = this.offerRepository.findById(offerId).orElse(null);
         if (offer != null) {
@@ -93,6 +91,7 @@ public class OfferServiceImpl implements OfferService {
             model.setImageUrl(offerAddDTO.getImageUrl());
             model.setCategory(offerAddDTO.getCategory());
             model.setCreated(LocalDateTime.now());
+
 
             if (!brand.getName().equals(offerAddDTO.getBrand())) {
                 brand = this.brandRepository.findByName(offerAddDTO.getBrand());
@@ -115,11 +114,15 @@ public class OfferServiceImpl implements OfferService {
 
             this.modelRepository.saveAndFlush(model);
             this.offerRepository.saveAndFlush(offer);
+//            applicationEventPublisher.publishEvent(new OfferModifiedEvent(this, offerId, "updated"));
         }
     }
 
     @Override
+    @CacheEvict(value = {"offers", "brands"}, allEntries = true, beforeInvocation = true)
     public void deleteOffer(String offerId) {
         this.offerRepository.deleteById(offerId);
+//        applicationEventPublisher.publishEvent(new OfferModifiedEvent(this, offerId, "deleted"));
     }
+
 }

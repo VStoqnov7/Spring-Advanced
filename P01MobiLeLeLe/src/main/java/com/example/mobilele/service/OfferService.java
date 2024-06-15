@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface OfferService {
 
-    List<Offer> allOffers();
-
     Offer findOfferById(String offerId);
 
     void updateOffer(String offerId, OfferAddDTO offerAddDTO);
