@@ -18,7 +18,6 @@ public class OfferModificationListener {
         sendModificationEmail(event.getOfferId(), event.getAction());
     }
 
-
     private void sendModificationEmail(String offerId, String action) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("....");

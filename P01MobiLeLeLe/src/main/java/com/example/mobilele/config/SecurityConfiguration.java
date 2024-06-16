@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -20,7 +22,6 @@ public class SecurityConfiguration {
         this.rememberMeKey = rememberMeKey;
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(
@@ -29,7 +30,7 @@ public class SecurityConfiguration {
                         // All static resources which are situated in js, images, css are available for anyone
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         // Allow anyone to see the home page, the registration page and the login form
-                        .requestMatchers("/", "/user/login", "/user/register", "/user/login-error").permitAll()
+                        .requestMatchers("/", "/user/login", "/user/register", "/user/login-error","/session-timeout").permitAll()
                         .requestMatchers("/user/offers/all", "/user/offers/details/{id}","/user/brands/all").hasRole(Role.USER.name())
                         .requestMatchers("/user/offers/update/{id}","/user/offers/delete/{id}").hasRole(Role.ADMIN.name())
                         // all other requests are authenticated.
@@ -64,7 +65,18 @@ public class SecurityConfiguration {
                             .rememberMeParameter("remember")
                             .rememberMeCookieName("remember");
                 }
+        ).sessionManagement(sessionManagement -> sessionManagement
+                        .invalidSessionUrl("/session-timeout.html")
+                        .maximumSessions(1)
+                        .expiredUrl("/session-expired")
+                        .and()
+                        .sessionFixation().none()
         ).build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
 }
