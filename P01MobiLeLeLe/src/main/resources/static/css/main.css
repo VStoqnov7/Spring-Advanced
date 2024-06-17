@@ -73,7 +73,7 @@ form.main-form {
     padding-top: 2rem;
 }
 
-.go-home {
+.go-home, .go-login {
     display: inline-block;
     padding: 10px 40px;
     font-size: 1.5rem;
@@ -86,7 +86,7 @@ form.main-form {
     text-align: center;
 }
 
-.go-home:hover {
+.go-home:hover , .go-login:hover {
     background-color: white;
     color: black;
 }

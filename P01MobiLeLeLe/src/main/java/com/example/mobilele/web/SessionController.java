@@ -9,7 +9,7 @@ public class SessionController {
 
     @GetMapping("/session-timeout")
     public ModelAndView sessionTimeout(ModelAndView model) {
-        model.setViewName("session-timeout.html");
+        model.setViewName("session-timeout");
         return model;
     }
 

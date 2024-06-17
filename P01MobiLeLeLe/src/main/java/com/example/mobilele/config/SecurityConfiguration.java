@@ -65,8 +65,9 @@ public class SecurityConfiguration {
                             .rememberMeParameter("remember")
                             .rememberMeCookieName("remember");
                 }
-        ).sessionManagement(sessionManagement -> sessionManagement
-                        .invalidSessionUrl("/session-timeout.html")
+        ).sessionManagement(sessionManagement ->
+                sessionManagement
+                        .invalidSessionUrl("/session-timeout")
                         .maximumSessions(1)
                         .expiredUrl("/session-expired")
                         .and()

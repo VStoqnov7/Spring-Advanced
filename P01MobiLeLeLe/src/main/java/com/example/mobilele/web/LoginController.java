@@ -1,9 +1,6 @@
 package com.example.mobilele.web;
 
-import com.example.mobilele.models.dto.UserLoginDTO;
-import com.example.mobilele.service.UserService;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,9 +34,7 @@ public class LoginController {
     public ModelAndView onLoginFailure(ModelAndView modelAndView, @ModelAttribute("username") String username) {
 
         modelAndView.addObject("bad_credentials", true);
-
-        modelAndView.setViewName("auth-login");
-
+        modelAndView.setViewName("redirect:/auth-login");
         return modelAndView;
     }
 
