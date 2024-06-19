@@ -9,9 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class MobiLeLeLeWebApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(MobiLeLeLeWebApplication.class, args);
     }
-
 }
