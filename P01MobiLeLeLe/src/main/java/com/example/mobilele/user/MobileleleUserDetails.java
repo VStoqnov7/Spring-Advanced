@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 public class MobileleleUserDetails implements UserDetails {
-
     private final String id;
     private final String username;
     private final String password;
@@ -15,7 +14,6 @@ public class MobileleleUserDetails implements UserDetails {
     private final Collection<GrantedAuthority> authorities;
 
     public MobileleleUserDetails(String id, String username, String password, String firstName, String lastName, Collection<GrantedAuthority> authorities) {
-
         this.id = id;
         this.username = username;
         this.password = password;
