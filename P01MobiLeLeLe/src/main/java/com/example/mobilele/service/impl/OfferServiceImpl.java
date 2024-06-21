@@ -110,6 +110,7 @@ public class OfferServiceImpl implements OfferService {
             offer.setMileage(offerAddDTO.getMileage());
             offer.setDescription(offerAddDTO.getDescription());
             offer.setImageUrl(offerAddDTO.getImageUrl());
+            offer.setPrice(offerAddDTO.getPrice());
             offer.setCreated(LocalDateTime.now());
 
             this.modelRepository.saveAndFlush(model);

@@ -24,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -154,22 +153,115 @@ class OfferServiceImplTest {
 
     @Test
     void testGetAllOffers() {
+        // Given
         List<Offer> offers = new ArrayList<>();
         offers.add(offer);
         when(offerRepository.findAll()).thenReturn(offers);
-
+        // When
         List<Offer> result = offerService.getAllOffers();
-
+        // Then
         assertEquals(1, result.size());
         assertEquals(offer, result.get(0));
     }
 
     @Test
     void testFindOfferById() {
+        // Given
         when(offerRepository.findById("1")).thenReturn(Optional.of(offer));
+        // When
         Offer result = offerService.findOfferById("1");
+        // Then
         assertNotNull(result);
         assertEquals(offer, result);
+    }
+
+    @Test
+    void testUpdateOfferWithExistingBrand() {
+        // Given
+        // Стойности за новото оферта
+        OfferAddDTO newOfferAddDTO = new OfferAddDTO()
+                .setModel("X9")
+                .setPrice(BigDecimal.valueOf(10000.00))
+                .setEngine(Engine.GASOLINE)
+                .setTransmission(Transmission.AUTOMATIC)
+                .setYear(2010)
+                .setMileage(10000)
+                .setImageUrl("example.com/image")
+                .setDescription("Test offer")
+                .setCategory(Category.CAR)
+                .setBrand("BMW");
+
+        // Мокиране на връщането на старата оферта
+        when(offerRepository.findById("1")).thenReturn(Optional.of(offer));
+
+        // When
+        // Извикване на метода updateOffer
+        offerService.updateOffer("1", newOfferAddDTO);
+
+        // Улавяне на актуализираната оферта
+        verify(offerRepository).saveAndFlush(offerCaptor.capture());
+        Offer updatedOffer = offerCaptor.getValue();
+
+        // Then
+        // Проверка на стойностите след първото актуализиране
+        assertEquals(newOfferAddDTO.getModel(), updatedOffer.getModel().getName());
+        assertEquals(newOfferAddDTO.getPrice(), updatedOffer.getPrice());
+        assertEquals(newOfferAddDTO.getEngine(), updatedOffer.getEngine());
+        assertEquals(newOfferAddDTO.getTransmission(), updatedOffer.getTransmission());
+        assertEquals(newOfferAddDTO.getYear(), updatedOffer.getYear());
+        assertEquals(newOfferAddDTO.getMileage(), updatedOffer.getMileage());
+        assertEquals(newOfferAddDTO.getImageUrl(), updatedOffer.getImageUrl());
+        assertEquals(newOfferAddDTO.getDescription(), updatedOffer.getDescription());
+        assertEquals(newOfferAddDTO.getCategory(), updatedOffer.getModel().getCategory());
+        assertEquals(newOfferAddDTO.getBrand(), updatedOffer.getModel().getBrand().getName());
+    }
+
+    @Test
+    void testUpdateOfferWithBrandChange() {
+        // Given
+        OfferAddDTO newOfferAddDTO = new OfferAddDTO()
+                .setModel("X9")
+                .setPrice(BigDecimal.valueOf(10000.00))
+                .setEngine(Engine.GASOLINE)
+                .setTransmission(Transmission.AUTOMATIC)
+                .setYear(2010)
+                .setMileage(10000)
+                .setImageUrl("example.com/image")
+                .setDescription("Test offer")
+                .setCategory(Category.CAR)
+                .setBrand("Toyota");
+
+        when(offerRepository.findById("1")).thenReturn(Optional.of(offer));
+        when(brandRepository.findByName("Toyota")).thenReturn(null);
+        when(brandRepository.saveAndFlush(Mockito.any(Brand.class)))
+                .thenAnswer(invocation -> {
+                    Brand savedBrand = invocation.getArgument(0);
+                    savedBrand.setName("Toyota");
+                    return savedBrand;
+                });
+
+        // When
+        offerService.updateOffer("1", newOfferAddDTO);
+
+        // Then
+        verify(offerRepository).saveAndFlush(offerCaptor.capture());
+        Offer updatedOffer = offerCaptor.getValue();
+        assertEquals(newOfferAddDTO.getModel(), updatedOffer.getModel().getName());
+        assertEquals(newOfferAddDTO.getPrice(), updatedOffer.getPrice());
+        assertEquals(newOfferAddDTO.getEngine(), updatedOffer.getEngine());
+        assertEquals(newOfferAddDTO.getTransmission(), updatedOffer.getTransmission());
+        assertEquals(newOfferAddDTO.getYear(), updatedOffer.getYear());
+        assertEquals(newOfferAddDTO.getMileage(), updatedOffer.getMileage());
+        assertEquals(newOfferAddDTO.getImageUrl(), updatedOffer.getImageUrl());
+        assertEquals(newOfferAddDTO.getDescription(), updatedOffer.getDescription());
+        assertEquals(newOfferAddDTO.getCategory(), updatedOffer.getModel().getCategory());
+        assertEquals(newOfferAddDTO.getBrand(), updatedOffer.getModel().getBrand().getName());
+    }
+
+    @Test
+    void testDeleteOffer() {
+        offerService.deleteOffer("1");
+        verify(offerRepository).deleteById("1");
     }
 
 }
