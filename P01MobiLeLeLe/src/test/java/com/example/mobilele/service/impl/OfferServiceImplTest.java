@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -121,10 +123,9 @@ class OfferServiceImplTest {
     }
 
     @Test
+    @Transactional
     public void testSaveOffer() {
         // Given
-        when(brandRepository.saveAndFlush(Mockito.any(Brand.class)))
-                .thenReturn(brand);
         when(userService.findByUsername(userDetails.getUsername())).thenReturn(Optional.of(user));
         when(modelMapper.map(offerAddDTO, Offer.class)).thenReturn(offer);
 
@@ -132,7 +133,7 @@ class OfferServiceImplTest {
         offerService.saveOffer(offerAddDTO, userDetails);
 
         // Then
-        verify(offerRepository).saveAndFlush(offerCaptor.capture());
+        verify(offerRepository).save(offerCaptor.capture());
         Offer savedOffer = offerCaptor.getValue();
 
         assertEquals(offer.getModel().getName(), savedOffer.getModel().getName());

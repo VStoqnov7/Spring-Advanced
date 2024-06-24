@@ -51,7 +51,7 @@ public class OfferServiceImpl implements OfferService {
                     .setName(offerAddDTO.getBrand())
                     .setCreated(LocalDateTime.now())
                     .setModels(new ArrayList<>());
-            existBrand = this.brandRepository.saveAndFlush(brand);
+            existBrand = brand;
         }
         Model model = new Model()
                 .setBrand(existBrand)
@@ -66,7 +66,7 @@ public class OfferServiceImpl implements OfferService {
         offer.setSeller(user);
         offer.setModel(model);
         offer.setCreated(LocalDateTime.now());
-        this.offerRepository.saveAndFlush(offer);
+        this.offerRepository.save(offer);
     }
     @Override
     @Cacheable(value = "offers")
