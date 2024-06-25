@@ -108,11 +108,13 @@ public class OfferController {
                                     @PathVariable String offerId,
                                     @Valid OfferAddDTO offerAddDTO,
                                     BindingResult bindingResult){
-
+        Offer offer = this.offerService.findOfferById(offerId);
         if (bindingResult.hasErrors()){
+            model.addObject("currentOffer", offer);
             model.addObject("engines", Engine.values());
             model.addObject("transmissions", Transmission.values());
             model.addObject("categories", Category.values());
+            model.addObject("offerId", offerId);
             model.setViewName("update");
             return model;
         }
@@ -120,7 +122,6 @@ public class OfferController {
         model.setViewName("redirect:/user/offers/details/" + offerId);
         return model;
     }
-
     @GetMapping("/details/delete/{offerId}")
     public ModelAndView deleteOffer(@PathVariable String offerId,ModelAndView model){
         this.offerService.deleteOffer(offerId);

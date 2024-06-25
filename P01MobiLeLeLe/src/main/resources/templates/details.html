@@ -38,7 +38,7 @@
                 <form method="post" style="display: inline-block; margin-left: 10px;">
                     <input type="hidden" name="_method" value="delete"/>
                     <a class="card-link"  th:href="'/user/offers/details/delete/' + ${currentOffer.id}"
-                       sec:authorize="hasRole('ADMIN')">Delete</a>
+                       sec:authorize="hasRole('USER')">Delete</a>
                 </form>
             </div>
         </div>
