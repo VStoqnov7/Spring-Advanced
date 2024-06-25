@@ -18,7 +18,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,8 +48,7 @@ public class OfferServiceImpl implements OfferService {
         if (existBrand == null) {
             Brand brand = new Brand()
                     .setName(offerAddDTO.getBrand())
-                    .setCreated(LocalDateTime.now())
-                    .setModels(new ArrayList<>());
+                    .setCreated(LocalDateTime.now());
             existBrand = brand;
         }
         Model model = new Model()

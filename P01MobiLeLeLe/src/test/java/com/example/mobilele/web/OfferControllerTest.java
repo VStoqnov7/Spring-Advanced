@@ -53,8 +53,8 @@ class OfferControllerTest {
 
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     @Transactional
+    @WithMockUser(username = "user", roles = {"USER"})
     void testAddOfferValid() throws Exception {
         MobileleleUserDetails userDetails = new MobileleleUserDetails(
                 "1",
@@ -87,5 +87,44 @@ class OfferControllerTest {
                 .with(user(userDetails)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/home"));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(username = "user", roles = {"USER"})
+    void testAddOfferFailure() throws Exception {
+        MobileleleUserDetails userDetails = new MobileleleUserDetails(
+                "1",
+                "user",
+                "202020",
+                "Georgi",
+                "Petrov",
+                Collections.singletonList(new SimpleGrantedAuthority(Role.USER.name())));
+
+        UserRegistrationDTO user = new UserRegistrationDTO()
+                .setFirstName("Georgi")
+                .setLastName("Petrov")
+                .setUsername("user")
+                .setPassword("202020");
+
+        this.userService.saveUser(user);
+
+        mockMvc.perform(post("/user/offers/add")
+                        .param("model", "")
+                        .param("price", "-30000.00")
+                        .param("engine", "")
+                        .param("transmission", "")
+                        .param("year", "1899")
+                        .param("mileage", "0")
+                        .param("imageUrl", "")
+                        .param("description", "Te")
+                        .param("category", "")
+                        .param("brand", "")
+                        .with(csrf())
+                        .with(user(userDetails)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("offer-add"))
+                .andExpect(model().attributeHasFieldErrors("offerAddDTO",
+                        "model", "price", "engine", "transmission", "year", "mileage", "imageUrl", "description", "category", "brand"));
     }
 }
