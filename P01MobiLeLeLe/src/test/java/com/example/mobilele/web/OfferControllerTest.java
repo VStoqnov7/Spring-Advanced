@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +30,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
@@ -147,7 +149,6 @@ class OfferControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     void testAllOffers() throws Exception {
-
         Offer offer1 = new Offer()
                 .setModel(new Model().setBrand(new Brand().setName("Toyota")))
                 .setImageUrl("Test1")
@@ -155,26 +156,33 @@ class OfferControllerTest {
                 .setPrice(BigDecimal.valueOf(2000))
                 .setEngine(Engine.DIESEL)
                 .setTransmission(Transmission.MANUAL);
+        offer1.setId("1");
+
         Offer offer2 = new Offer()
                 .setModel(new Model().setBrand(new Brand().setName("BMW")))
-                .setImageUrl("Test1")
+                .setImageUrl("Test2")
                 .setMileage(1300)
                 .setPrice(BigDecimal.valueOf(3000))
                 .setEngine(Engine.GASOLINE)
                 .setTransmission(Transmission.AUTOMATIC);
+
+        offer2.setId("2");
         List<Offer> allOffers = Arrays.asList(offer1, offer2);
+        allOffers.sort(Comparator.comparing(Offer::getId));
 
-        when(offerService.getAllOffers()).thenReturn(allOffers);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("id").ascending());
+        Page<Offer> page = new PageImpl<>(allOffers, pageable, allOffers.size());
 
+        when(offerService.getAllOffers(pageable)).thenReturn(page);
+
+        System.out.println();
+        // Perform the GET request and validate the response
         mockMvc.perform(get("/user/offers/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("offers"))
-                .andExpect(model().attributeExists("allOffers"))
-                .andExpect(model().attribute("allOffers", hasSize(2)))
-                .andExpect(model().attribute("allOffers", containsInAnyOrder(
-                        hasProperty("model", hasProperty("brand", hasProperty("name", is("Toyota")))),
-                        hasProperty("model", hasProperty("brand", hasProperty("name", is("BMW"))))
-                )));
+                .andExpect(model().attributeExists("offers"))
+                .andExpect(model().attribute("offers", hasProperty("content", hasSize(2))))
+                .andExpect(model().attribute("offers", hasProperty("content", containsInAnyOrder(offer1, offer2))));
     }
 
     @Test

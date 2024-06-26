@@ -3,10 +3,12 @@ package com.example.mobilele.service;
 import com.example.mobilele.models.dto.OfferAddDTO;
 import com.example.mobilele.models.entity.Offer;
 import com.example.mobilele.user.MobileleleUserDetails;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface OfferService {
+
+    Page<Offer> getAllOffers(Pageable pageable);
 
     Offer findOfferById(String offerId);
 
@@ -15,7 +17,5 @@ public interface OfferService {
     void deleteOffer(String offerId);
 
     void saveOffer(OfferAddDTO offerAddDTO, MobileleleUserDetails userDetails);
-
-    List<Offer> getAllOffers();
 
 }

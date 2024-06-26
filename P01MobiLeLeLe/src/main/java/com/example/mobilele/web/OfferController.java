@@ -8,13 +8,14 @@ import com.example.mobilele.models.enums.Transmission;
 import com.example.mobilele.service.OfferService;
 import com.example.mobilele.user.MobileleleUserDetails;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/user/offers")
@@ -63,12 +64,13 @@ public class OfferController {
     }
 
     @GetMapping("/all")
-    public ModelAndView allOffers(ModelAndView model){
-        List<Offer> allOffers = this.offerService.getAllOffers();
-        model.addObject("allOffers", allOffers);
+    public ModelAndView getAllOffers(@PageableDefault(sort = "id", size = 5) Pageable pageable, ModelAndView model) {
+        Page<Offer> allOffersPage = offerService.getAllOffers(pageable);
         model.setViewName("offers");
+        model.addObject("offers", allOffersPage);
         return model;
     }
+
 
     @GetMapping("/details/{offerId}")
     public ModelAndView offerDetails(ModelAndView model, @PathVariable String offerId){

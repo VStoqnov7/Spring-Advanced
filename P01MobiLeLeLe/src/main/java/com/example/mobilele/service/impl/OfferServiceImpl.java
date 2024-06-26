@@ -15,10 +15,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class OfferServiceImpl implements OfferService {
@@ -68,8 +69,8 @@ public class OfferServiceImpl implements OfferService {
     }
     @Override
     @Cacheable(value = "offers")
-    public List<Offer> getAllOffers() {
-        return this.offerRepository.findAll();
+    public Page<Offer> getAllOffers(Pageable pageable) {
+        return offerRepository.findAll(pageable);
     }
 
     @Override

@@ -17,6 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -157,12 +161,18 @@ class OfferServiceImplTest {
         // Given
         List<Offer> offers = new ArrayList<>();
         offers.add(offer);
-        when(offerRepository.findAll()).thenReturn(offers);
+
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Offer> page = new PageImpl<>(offers, pageable, offers.size());
+
+        when(offerRepository.findAll(pageable)).thenReturn(page);
+
         // When
-        List<Offer> result = offerService.getAllOffers();
+        Page<Offer> result = offerService.getAllOffers(pageable);
+
         // Then
-        assertEquals(1, result.size());
-        assertEquals(offer, result.get(0));
+        assertEquals(1, result.getTotalElements());
+        assertEquals(offer, result.getContent().get(0));
     }
 
     @Test
@@ -264,5 +274,4 @@ class OfferServiceImplTest {
         offerService.deleteOffer("1");
         verify(offerRepository).deleteById("1");
     }
-
 }
