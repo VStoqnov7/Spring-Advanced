@@ -5,18 +5,16 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}  # Паролата за root потребителя на MySQL
-      MYSQL_DATABASE: mobilelele  # Името на базата данни
-      MYSQL_USER: ${MYSQL_USER:-root}  # Потребителското име за MySQL
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-1122}  # Паролата за MySQL потребителя
+      - MYSQL_ALLOW_EMPTY_PASSWORD="yes"  # Позволява празна парола за root потребителя
+      - MYSQL_DATABASE=mobilelele  # Името на базата данни
     ports:
-      - "3306:3306"  # Пренасочване на портовете за MySQL (локален порт:контейнер порт)
+      - "3307:3306"  # Пренасочване на портовете за MySQL (локален порт:контейнер порт)
 
   mobilelele:  # Добавяме услугата за Spring приложението
-#    image: mobilelele:latest  # Заменете със своя образ на Spring приложението
-    build: .
+    image: mobilelele:v1  # Заменете със своя образ на Spring приложението
+    depends_on: [db]
     ports:
-      - "8080:8080"  # Пренасочване на портовете за Spring приложението (локален порт:контейнер порт)
+      - "8081:8080"  # Пренасочване на портовете за Spring приложението (локален порт:контейнер порт)
     environment:
       MYSQL_HOST: db  # Името на услугата за MySQL (това съответства на името на услугата в docker-compose)
       MYSQL_USER: ${MYSQL_USER:-root}  # Потребителското име за MySQL (същото като горе)
