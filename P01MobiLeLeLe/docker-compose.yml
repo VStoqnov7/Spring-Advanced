@@ -1,0 +1,47 @@
+services:
+  mysqldb:
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=mobilelele
+    ports:
+      - "3307:3306"
+
+  mobilelele:
+    image: mobilelele:v1
+    depends_on:
+      - mysqldb
+    ports:
+      - "8080:8080"
+    environment:
+      - MYSQL_HOST=mysqldb
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=1122
+      - MYSQL_DATABASE=mobilelele
+      - REMEMBER_ME_KEY=${REMEMBER_ME_KEY:-secret}
+      - SERVER_SERVLET_SESSION_TIMEOUT=30m
+#      - SPRING_MAIL_HOST=smtp.example.com
+#      - SPRING_MAIL_PORT=587
+#      - SPRING_MAIL_USERNAME=${MAIL_USER:-your-email@example.com}
+#      - SPRING_MAIL_PASSWORD=${YOUR_PASSWORD:-your-email-password}
+#      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+#      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+      - TWILIO_ACCOUNT_SID=YOUR_TWILIO_ACCOUNT_SID
+      - TWILIO_AUTH_TOKEN=YOUR_TWILIO_AUTH_TOKEN
+      - TWILIO_PHONE_NUMBER=YOUR_TWILIO_PHONE_NUMBER
+
+  prometheus:
+    image: prom/prometheus:v2.43.0
+    container_name: prometheus
+    ports:
+      - "9000:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:8.5.22
+    container_name: grafana
+    ports:
+      - "3000:3000"

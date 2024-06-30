@@ -39,50 +39,52 @@
     </div>
 
     <!-- Pagination Controls -->
-    <div class="row justify-content-center mt-3">
-        <div class="pagination-controls">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
+    <th:block th:if="${offers.content.size() > 0}">
+        <div class="row justify-content-center mt-3">
+            <div class="pagination-controls">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
 
-                    <!-- First Page -->
-                    <li class="page-item" th:classappend="${offers.first ? 'disabled' : ''}">
-                        <a th:unless="${offers.first}" class="page-link"
-                           th:href="@{/user/offers/all(page=0)}">First</a>
-                        <a th:if="${offers.first}" class="page-link" href="#">First</a>
-                    </li>
+                        <!-- First Page -->
+                        <li class="page-item" th:classappend="${offers.first ? 'disabled' : ''}">
+                            <a th:unless="${offers.first}" class="page-link"
+                               th:href="@{/user/offers/all(page=0)}">First</a>
+                            <a th:if="${offers.first}" class="page-link" href="#">First</a>
+                        </li>
 
-                    <!-- Previous Page -->
-                    <li class="page-item" th:classappend="${offers.first ? 'disabled' : ''}">
-                        <a th:unless="${offers.first}" class="page-link"
-                           th:href="@{/user/offers/all(page=${offers.number - 1})}">Previous</a>
-                        <a th:if="${offers.first}" class="page-link" href="#">Previous</a>
-                    </li>
+                        <!-- Previous Page -->
+                        <li class="page-item" th:classappend="${offers.first ? 'disabled' : ''}">
+                            <a th:unless="${offers.first}" class="page-link"
+                               th:href="@{/user/offers/all(page=${offers.number - 1})}">Previous</a>
+                            <a th:if="${offers.first}" class="page-link" href="#">Previous</a>
+                        </li>
 
-                    <!-- Numbered Pages -->
-                    <span th:each="i : ${#numbers.sequence(0, offers.totalPages - 1)}">
+                        <!-- Numbered Pages -->
+                        <span th:each="i : ${#numbers.sequence(0, offers.totalPages - 1)}">
                     <li class="page-item" th:classappend="${offers.number == i ? 'active' : ''}">
                         <a class="page-link" th:href="@{/user/offers/all(page=${i})}" th:text="${i + 1}"></a>
                     </li>
                 </span>
 
-                    <!-- Next Page -->
-                    <li class="page-item" th:classappend="${offers.last ? 'disabled' : ''}">
-                        <a th:unless="${offers.last}" class="page-link"
-                           th:href="@{/user/offers/all(page=${offers.number + 1})}">Next</a>
-                        <a th:if="${offers.last}" class="page-link" href="#">Next</a>
-                    </li>
+                        <!-- Next Page -->
+                        <li class="page-item" th:classappend="${offers.last ? 'disabled' : ''}">
+                            <a th:unless="${offers.last}" class="page-link"
+                               th:href="@{/user/offers/all(page=${offers.number + 1})}">Next</a>
+                            <a th:if="${offers.last}" class="page-link" href="#">Next</a>
+                        </li>
 
-                    <!-- Last Page -->
-                    <li class="page-item" th:classappend="${offers.last ? 'disabled' : ''}">
-                        <a th:unless="${offers.last}" class="page-link"
-                           th:href="@{/user/offers/all(page=${offers.totalPages - 1})}">Last</a>
-                        <a th:if="${offers.last}" class="page-link" href="#">Last</a>
-                    </li>
+                        <!-- Last Page -->
+                        <li class="page-item" th:classappend="${offers.last ? 'disabled' : ''}">
+                            <a th:unless="${offers.last}" class="page-link"
+                               th:href="@{/user/offers/all(page=${offers.totalPages - 1})}">Last</a>
+                            <a th:if="${offers.last}" class="page-link" href="#">Last</a>
+                        </li>
 
-                </ul>
-            </nav>
+                    </ul>
+                </nav>
+            </div>
         </div>
-    </div>
+    </th:block>
     <!-- End Pagination Controls -->
 </div>
 
