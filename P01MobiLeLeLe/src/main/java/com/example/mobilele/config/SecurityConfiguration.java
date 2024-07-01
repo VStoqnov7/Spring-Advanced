@@ -2,7 +2,6 @@ package com.example.mobilele.config;
 
 import com.example.mobilele.models.enums.Role;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +29,7 @@ public class SecurityConfiguration {
                         // All static resources which are situated in js, images, css are available for anyone
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         // Allow access to Actuator endpoints
-                        .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
+//                        .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                         // Allow anyone to see the home page, the registration page and the login form
                         .requestMatchers("/", "/user/login", "/user/register", "/user/login-error","/session-timeout").permitAll()
                         .requestMatchers("/user/offers/all", "/user/offers/details/{id}","/user/brands/all").hasRole(Role.USER.name())
