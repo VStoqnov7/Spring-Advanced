@@ -2,7 +2,6 @@ package com.example.mobilele.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,10 +30,10 @@ public class LoginController {
     }
 
     @PostMapping("/login-error")
-    public ModelAndView onLoginFailure(ModelAndView modelAndView, @ModelAttribute("username") String username) {
+    public ModelAndView onLoginFailure(ModelAndView modelAndView) {
 
         modelAndView.addObject("bad_credentials", true);
-        modelAndView.setViewName("redirect:/auth-login");
+        modelAndView.setViewName("auth-login");
         return modelAndView;
     }
 

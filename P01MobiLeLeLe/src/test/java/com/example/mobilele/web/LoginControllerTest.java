@@ -31,8 +31,8 @@ class LoginControllerTest {
         mockMvc.perform(post("/user/login-error")
                         .param("username", "testUser")
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/auth-login?bad_credentials=true"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("auth-login"));
     }
 
 }

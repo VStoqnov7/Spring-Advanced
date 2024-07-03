@@ -57,14 +57,14 @@ public class SecurityConfiguration {
                             .logoutSuccessUrl("/")
                             // invalidate the HTTP session
                             .invalidateHttpSession(true)
-                            .deleteCookies("JSESSIONID");
+                            .deleteCookies("JSESSIONID", "remember");
                 }
         ).rememberMe(
                 rememberMe -> {
                     rememberMe
                             .key(rememberMeKey)
-                            .rememberMeParameter("remember")
-                            .rememberMeCookieName("remember");
+                            .rememberMeParameter("remember") // This matches the name of the checkbox in the HTML form; // 30 days
+                            .tokenValiditySeconds(604800);
                 }
         ).sessionManagement(sessionManagement ->
                 sessionManagement
